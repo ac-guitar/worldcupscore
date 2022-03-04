@@ -15,15 +15,14 @@ public class Processor {
     public void init(){
 
         matches = new ArrayList<>();
-
         String homeTeam;
         String awayTeam;
         String choice;
         Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+
         while(true) {
 
             //create menu
-            System.out.println("\n");
             System.out.println("### World Cup Score ###");
             System.out.println("Press 1 to start a game.");
             System.out.println("Press 2 to finish current game.");
@@ -32,12 +31,7 @@ public class Processor {
             System.out.println("Press 5 to quit \n");
 
             System.out.println("Select your option:");
-            try{
-                choice = scanner.next();
-            } catch (InputMismatchException e){
-                System.out.println("Invalid option. Select an option from 1 to 5. \n");
-                continue;
-            }
+            choice = scanner.next();
 
             switch (choice) {
 
@@ -60,7 +54,7 @@ public class Processor {
 
                     break;
 
-                // Finish a game
+                // Finish current game
                 case "2":
                     if(!matchStatus){
                         System.out.println("First start a game. \n");
@@ -70,7 +64,7 @@ public class Processor {
                     }
                     break;
 
-                // Update score
+                // Update current game score
                 case "3":
 
                     if(!matchStatus){
@@ -82,8 +76,10 @@ public class Processor {
                         System.out.println("Enter the Away team score");
                         int awayScore = scanner.nextInt();
                         updateMatch(homeScore, awayScore);
-                        System.out.println("Current match: \n");
+                        System.out.println("\n");
+                        System.out.println("Current match:");
                         showCurrentMatch(currentMatch);
+                        System.out.println("\n");
                     }
                     break;
 
@@ -91,12 +87,13 @@ public class Processor {
                 case "4":
 
                     if(!matches.isEmpty()){
-                        System.out.println("Cup summary \n");
+                        System.out.println("### Cup summary ###");
                         // sort matches by score
                         sortMatchesByScore();
                         for(Match match : matches){
                             showCurrentMatch(match);
                         }
+                        System.out.println("\n");
                     }
                     else{
                         System.out.println("There are no matches. Please start a game. \n");
@@ -109,7 +106,7 @@ public class Processor {
                     System.exit(0);
                     // invalid option
                 default:
-                    System.out.println("Invalid option. Select an option from 1 to 5. \n");
+                    System.out.println("Invalid option. Select an option from 1 to 5.");
             }
         }
 
@@ -146,20 +143,17 @@ public class Processor {
     }
 
     public void sortMatchesByScore(){
-        Collections.sort(matches, new Comparator<>() {
+        matches.sort((o1, o2) -> {
 
-            @Override
-            public int compare(Match o1, Match o2) {
-                int match1HomeScore = o1.getHomeTeam().getScore();
-                int match1AwayScore = o1.getAwayTeam().getScore();
-                int totalMatch1 = match1HomeScore + match1AwayScore;
+            int match1HomeScore = o1.getHomeTeam().getScore();
+            int match1AwayScore = o1.getAwayTeam().getScore();
+            int totalMatch1 = match1HomeScore + match1AwayScore;
 
-                int match2HomeScore = o2.getHomeTeam().getScore();
-                int match2AwayScore = o2.getAwayTeam().getScore();
-                int totalMatch2 = match2HomeScore + match2AwayScore;
+            int match2HomeScore = o2.getHomeTeam().getScore();
+            int match2AwayScore = o2.getAwayTeam().getScore();
+            int totalMatch2 = match2HomeScore + match2AwayScore;
 
-                return totalMatch2 - totalMatch1;
-            }
+            return totalMatch2 - totalMatch1;
 
         });
     }
